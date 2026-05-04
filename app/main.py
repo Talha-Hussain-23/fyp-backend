@@ -371,9 +371,13 @@ async def api_status():
 
 if __name__ == "__main__":
     import uvicorn
-    # This block is used for local development.
-    # In production, use the uvicorn CLI directly.
+    # Use the PORT environment variable if available (Railway sets this)
+    # Falling back to settings.PORT (8080) for consistency
     port = int(os.environ.get("PORT", settings.PORT))
-    logger.info("starting_local_development_server", host="0.0.0.0", port=port)
+    logger.info("starting_api_server", host="0.0.0.0", port=port, environment=settings.ENVIRONMENT)
+    
+    # We pass the 'app' object directly instead of a string "app.main:app"
+    # This prevents Uvicorn from re-importing the module and loading everything twice.
     uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+
 

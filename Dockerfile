@@ -64,6 +64,6 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     try: urllib.request.urlopen(f'http://127.0.0.1:{port}/health'); \
     except Exception as e: print(e); exit(1)"
 
-# Start the application using uvicorn CLI for optimal production performance
-# We use --host 0.0.0.0 to bind to all interfaces
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Start the application using python app/main.py
+# This allows the script to handle dynamic PORT expansion internally
+CMD ["python", "app/main.py"]

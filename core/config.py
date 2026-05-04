@@ -56,7 +56,7 @@ class Settings(BaseSettings):
 
     # ─── Security (Required) ─────────────────────────────────────
     SECRET_KEY: str = Field(default="temporary-secret-key-for-dev")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 1440  # 24 hours
     JWT_ALGORITHM: str = "HS256"
 
     # ─── AI Services ──────────────────────────────────────────────
@@ -95,7 +95,7 @@ class Settings(BaseSettings):
     TEMP_DIR: Path = BASE_DIR / "temp"
 
     # ─── File Limits ──────────────────────────────────────────────
-    MAX_UPLOAD_SIZE_MB: int = 25
+    MAX_UPLOAD_SIZE_MB: int = 10
     ALLOWED_RESUME_EXTENSIONS: str = "pdf,doc,docx"
     UPLOAD_DIR: str = "uploads"
 

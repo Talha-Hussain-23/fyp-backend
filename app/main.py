@@ -50,91 +50,105 @@ def _register_task(task: asyncio.Task) -> asyncio.Task:
 # ──────────────────────────────────────────────────────────────
 async def _bootstrap_background_services(app: FastAPI):
     """
-    Launches all heavy background services AFTER the server is already
-    accepting connections. This ensures Railway's health check passes
-    before any long-running initialization begins.
+    Launches ALL services (including DB) AFTER the server is already
+    accepting connections. This guarantees Railway's health check passes
+    before any potentially slow initialization begins.
     """
-    # Small delay to guarantee the event loop is fully serving requests
-    await asyncio.sleep(0.5)
+    # Give the event loop time to fully bind the port and serve /health
+    await asyncio.sleep(1)
     logger.info("background_bootstrap_started")
 
-    # ── Database Optimization (non-blocking) ─────────────────
+    # ── 1. Database Connection ───────────────────────────────
+    db = None
     try:
-        from services.infrastructure.db_optimizer import create_performance_indexes, optimize_database_connection
-        from utils.db import get_db
+        from utils.db import get_db, get_connection_manager
+        from services.infrastructure.event_handlers import register_event_handlers
 
-        async def background_db_init():
-            try:
-                logger.info("optimizing_database_async")
-                db = await get_db()
-                await create_performance_indexes(db)
-                await optimize_database_connection(db)
-                logger.info("database_optimization_complete")
-            except Exception as e:
-                logger.error("db_optimization_failed", error=str(e))
+        register_event_handlers()
 
-        _register_task(asyncio.create_task(background_db_init()))
+        manager = await get_connection_manager()
+        db = manager.get_database()
+
+        init_logging_service(db)
+        logger.info("database_connected", database=settings.DATABASE_NAME)
+        rich_logger.print_status("Database Connected", status="success", details=["Driver: Motor/Async"])
     except Exception as e:
-        logger.error("db_optimizer_import_failed", error=str(e))
+        logger.error("database_connection_failed", error=str(e))
 
-    # ── Proctoring Services ──────────────────────────────────
-    try:
-        from utils.db import get_db
-        db = await get_db()
+    # ── 2. Database Optimization (non-blocking) ──────────────
+    if db is not None:
+        try:
+            from services.infrastructure.db_optimizer import create_performance_indexes, optimize_database_connection
 
-        from app.proctoring.session_manager import SessionManager
-        session_manager = SessionManager(db)
-        app.state.session_manager = session_manager
-
-        from app.proctoring.socket_controller import SocketController
-        import app.proctoring.socketio_server as socketio_server
-
-        socketio_server.controller = SocketController(
-            socketio_server.sio,
-            session_manager,
-            db
-        )
-        logger.info("proctoring_controller_initialized")
-
-        # Session watchdog — garbage-collects stale sessions
-        async def session_watchdog():
-            logger.info("session_watchdog_started")
-            while True:
+            async def background_db_init():
                 try:
-                    await asyncio.sleep(300)
-                    removed = await session_manager.garbage_collect_stale_sessions(max_idle_minutes=10)
-                    if removed > 0:
-                        logger.info("watchdog_cleanup", removed=removed)
-                except asyncio.CancelledError:
-                    logger.info("session_watchdog_stopped")
-                    break
+                    logger.info("optimizing_database_async")
+                    await create_performance_indexes(db)
+                    await optimize_database_connection(db)
+                    logger.info("database_optimization_complete")
                 except Exception as e:
-                    logger.error("watchdog_error", error=str(e))
+                    logger.error("db_optimization_failed", error=str(e))
 
-        app.state.watchdog_task = _register_task(asyncio.create_task(session_watchdog()))
+            _register_task(asyncio.create_task(background_db_init()))
+        except Exception as e:
+            logger.error("db_optimizer_import_failed", error=str(e))
 
-        # Timer watchdog — handles per-question timeouts
-        async def timer_watchdog():
-            logger.info("timer_watchdog_started")
-            from services.interview.interview_timer import InterviewTimer
-            timer_service = InterviewTimer(db)
-            while True:
-                try:
-                    await asyncio.sleep(1)
-                    if getattr(socketio_server, 'controller', None):
-                        await timer_service.process_question_timeouts(socketio_server.controller)
-                except asyncio.CancelledError:
-                    logger.info("timer_watchdog_stopped")
-                    break
-                except Exception as e:
-                    logger.error("timer_watchdog_error", error=str(e))
+    # ── 3. Proctoring Services ───────────────────────────────
+    if db is not None:
+        try:
+            from app.proctoring.session_manager import SessionManager
+            session_manager = SessionManager(db)
+            app.state.session_manager = session_manager
 
-        app.state.timer_task = _register_task(asyncio.create_task(timer_watchdog()))
-        rich_logger.print_status("Proctoring Services Started", status="success")
-    except Exception as e:
-        logger.error("proctoring_init_failed", error=str(e))
+            from app.proctoring.socket_controller import SocketController
+            import app.proctoring.socketio_server as socketio_server
 
-    # ── Background Scheduler ─────────────────────────────────
+            socketio_server.controller = SocketController(
+                socketio_server.sio,
+                session_manager,
+                db
+            )
+            logger.info("proctoring_controller_initialized")
+
+            # Session watchdog — garbage-collects stale sessions
+            async def session_watchdog():
+                logger.info("session_watchdog_started")
+                while True:
+                    try:
+                        await asyncio.sleep(300)
+                        removed = await session_manager.garbage_collect_stale_sessions(max_idle_minutes=10)
+                        if removed > 0:
+                            logger.info("watchdog_cleanup", removed=removed)
+                    except asyncio.CancelledError:
+                        logger.info("session_watchdog_stopped")
+                        break
+                    except Exception as e:
+                        logger.error("watchdog_error", error=str(e))
+
+            app.state.watchdog_task = _register_task(asyncio.create_task(session_watchdog()))
+
+            # Timer watchdog — handles per-question timeouts
+            async def timer_watchdog():
+                logger.info("timer_watchdog_started")
+                from services.interview.interview_timer import InterviewTimer
+                timer_service = InterviewTimer(db)
+                while True:
+                    try:
+                        await asyncio.sleep(1)
+                        if getattr(socketio_server, 'controller', None):
+                            await timer_service.process_question_timeouts(socketio_server.controller)
+                    except asyncio.CancelledError:
+                        logger.info("timer_watchdog_stopped")
+                        break
+                    except Exception as e:
+                        logger.error("timer_watchdog_error", error=str(e))
+
+            app.state.timer_task = _register_task(asyncio.create_task(timer_watchdog()))
+            rich_logger.print_status("Proctoring Services Started", status="success")
+        except Exception as e:
+            logger.error("proctoring_init_failed", error=str(e))
+
+    # ── 4. Background Scheduler ──────────────────────────────
     async def run_scheduler():
         from utils.db import get_db
         from services.automation.job_automation import process_scheduled_jobs, check_and_process_deadlines
@@ -154,7 +168,7 @@ async def _bootstrap_background_services(app: FastAPI):
     _register_task(asyncio.create_task(run_scheduler()))
     rich_logger.print_status("Scheduler Running", status="success", details=["Interval: 60s", "Mode: Async"])
 
-    # ── Email Worker ─────────────────────────────────────────
+    # ── 5. Email Worker ──────────────────────────────────────
     try:
         from services.email.email_worker import email_worker
         _register_task(asyncio.create_task(email_worker.start()))
@@ -164,22 +178,19 @@ async def _bootstrap_background_services(app: FastAPI):
         logger.error("email_worker_start_failed", error=str(e))
 
     logger.info("background_bootstrap_complete")
+    rich_logger.print_section("ALL SERVICES READY", "✅")
 
 
 # ──────────────────────────────────────────────────────────────
-# Lifespan: LIGHTWEIGHT startup / graceful shutdown
+# Lifespan: INSTANT startup / graceful shutdown
 # ──────────────────────────────────────────────────────────────
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
     Railway-safe lifespan handler.
-    ONLY performs critical, fast initialization:
-      1. DB connection (Motor async — non-blocking)
-      2. Cache init (in-memory — instant)
-      3. Event handler registration
-    Then yields immediately so Uvicorn binds the port.
-    All heavy background work is scheduled via asyncio.create_task
-    and runs AFTER the server is accepting connections.
+    Does ZERO blocking work — just prints banner, inits cache (sync/instant),
+    and yields immediately so Uvicorn binds the port in milliseconds.
+    DB connection + all services are deferred to @app.on_event("startup").
     """
     # Print Startup Banner
     rich_logger.print_banner(
@@ -196,25 +207,8 @@ async def lifespan(app: FastAPI):
     )
 
     logger.info("startup_initiated", version=settings.APP_VERSION, env=settings.ENVIRONMENT)
-    rich_logger.print_section("INITIALIZING CORE SERVICES", ">")
 
-    # ── 1. Database Connection (lightweight — just connect, no heavy ops) ──
-    try:
-        from utils.db import get_db, get_connection_manager
-        from services.infrastructure.event_handlers import register_event_handlers
-
-        register_event_handlers()
-
-        manager = await get_connection_manager()
-        db = manager.get_database()
-
-        init_logging_service(db)
-        rich_logger.print_status("Database Connected", status="success", details=["Driver: Motor/Async"])
-    except Exception as e:
-        logger.critical("startup_failed_database", error=str(e))
-        raise
-
-    # ── 2. Cache (instant — in-memory) ───────────────────────
+    # ── Cache (instant — in-memory, no await) ────────────────
     try:
         from core.cache import get_cache_service
         get_cache_service()
@@ -222,13 +216,11 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error("cache_init_failed", error=str(e))
 
-    # Background services are launched via @app.on_event("startup")
-    # AFTER the server has fully bound the port — see startup_background_services()
-
-    # ── SERVER IS READY — yield to Uvicorn ───────────────────
+    # ── SERVER IS READY — yield to Uvicorn immediately ───────
+    # DB + background services launch via @app.on_event("startup")
     port = int(os.environ.get("PORT", settings.PORT))
-    logger.info("application_ready", host="0.0.0.0", port=port, message="Server is accepting connections")
-    rich_logger.print_section("SERVER READY", "✅")
+    logger.info("server_binding", host="0.0.0.0", port=port)
+    rich_logger.print_section("SERVER READY — PORT BOUND", "✅")
     yield
 
     # ── Shutdown ─────────────────────────────────────────────

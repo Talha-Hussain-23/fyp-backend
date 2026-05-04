@@ -199,7 +199,7 @@ async def lifespan(app: FastAPI):
         info={
             "Environment": settings.ENVIRONMENT,
             "Host": "0.0.0.0",
-            "Port": os.environ.get("PORT", str(settings.PORT)),
+            "Port": os.environ.get("PORT", "unknown"),
             "Database": settings.DATABASE_NAME,
             "Python": f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
         },
@@ -221,7 +221,7 @@ async def lifespan(app: FastAPI):
     _register_task(asyncio.create_task(_bootstrap_background_services(app)))
 
     # ── SERVER IS READY — yield to Uvicorn immediately ───────
-    port = int(os.environ.get("PORT", settings.PORT))
+    port = int(os.environ["PORT"])
     logger.info("server_binding", host="0.0.0.0", port=port)
     rich_logger.print_section("SERVER READY — PORT BOUND", "✅")
     print(f"[BOOT] Yielding to Uvicorn on port {port}", flush=True)

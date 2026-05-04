@@ -18,8 +18,9 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         
         # Get environment
-        is_production = os.getenv('FLASK_ENV') == 'production'
-        base_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+        from core.config import settings
+        is_production = settings.ENVIRONMENT == 'production'
+        base_url = settings.active_frontend_url
         
         # Strict-Transport-Security (HSTS) - Force HTTPS
         if is_production:

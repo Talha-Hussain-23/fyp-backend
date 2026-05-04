@@ -14,7 +14,9 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 logger = logging.getLogger(__name__)
 load_dotenv()
 
-BASE_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+from core.config import settings
+
+BASE_URL = settings.active_frontend_url
 
 # Setup Jinja2 Environment
 backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

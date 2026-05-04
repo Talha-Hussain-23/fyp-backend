@@ -29,8 +29,10 @@ SCOPES = [
 ]
 
 # OAuth Configuration
+from core.config import settings
+
 CLIENT_SECRETS_FILE = os.getenv("GOOGLE_CREDENTIALS_FILE", "credentials.json")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+FRONTEND_URL = settings.active_frontend_url
 
 
 def get_redirect_uri_from_credentials() -> str:

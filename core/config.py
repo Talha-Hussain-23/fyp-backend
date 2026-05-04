@@ -145,6 +145,20 @@ class Settings(BaseSettings):
         self.LOGS_DIR.mkdir(parents=True, exist_ok=True)
         return self.LOGS_DIR
 
+    @property
+    def active_frontend_url(self) -> str:
+        urls = [u.strip() for u in self.FRONTEND_URL.split(',')]
+        if self.ENVIRONMENT == "production":
+            return next((u for u in urls if "https" in u), urls[-1])
+        return urls[0]
+
+    @property
+    def active_backend_url(self) -> str:
+        urls = [u.strip() for u in self.BACKEND_URL.split(',')]
+        if self.ENVIRONMENT == "production":
+            return next((u for u in urls if "https" in u), urls[-1])
+        return urls[0]
+
 
 def _validate_required_settings(s: "Settings") -> None:
     """Fail fast if critical environment variables are missing or insecure."""

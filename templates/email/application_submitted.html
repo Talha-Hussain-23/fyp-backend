@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Application Submitted - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>✅ Application Received</h1>
+<p>We've received your application for {{ jobTitle }}</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>Thank you for applying to <strong>{{ jobTitle }}</strong>. We have successfully received your application details.</p>
+
+<div class="alert-success">
+    <strong>📋 What Happens Next?</strong>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+        <li>Our AI-powered screening system matches your profile against the job requirements.</li>
+        <li>We'll assess your qualifications instantly.</li>
+        <li>You can expect to hear from us within 2-3 business days.</li>
+    </ul>
+</div>
+
+<p>If your profile matches our requirements, we'll send you an interview invitation shortly. Please keep an eye on your email for updates.</p>
+
+<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+    <p style="font-weight: bold; color: #4F46E5; margin-bottom: 4px;">{{ recruiterName }}</p>
+    <p style="font-size: 14px; color: #64748b; margin: 0;">Innovating recruitment with artificial intelligence</p>
+</div>
+{% endblock %}

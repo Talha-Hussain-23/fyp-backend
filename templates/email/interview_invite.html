@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Invitation - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>🎯 Next Step: Interview</h1>
+<p>Invitation for {{ jobTitle }}</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hi {{ candidateName }},</h2>
+
+<p>We were impressed by your profile and would like to invite you to the next stage of our selection process for the <strong>{{ jobTitle }}</strong> role.</p>
+
+<div class="card">
+    <h3 style="margin-top: 0; color: #0f172a;">Assessment Details</h3>
+    <ul style="margin-bottom: 0; padding-left: 20px; color: #475569;">
+        <li><strong>Format:</strong> Video & Technical Assessment</li>
+        <li><strong>Device:</strong> 💻 Laptop/Desktop ONLY (No Mobile/Tablets)</li>
+        <li><strong>Proctoring:</strong> 📸 Camera & Mic Access Required</li>
+        <li><strong>Environment:</strong> 🏠 Quiet, well-lit room required</li>
+    </ul>
+</div>
+
+<div class="alert-warning" style="display: flex; align-items: flex-start; gap: 12px;">
+    <span style="font-size: 24px;">🛡️</span>
+    <div>
+        <strong style="display: block; margin-bottom: 4px;">Security Protocols Active</strong>
+        <span style="font-size: 14px;">This assessment uses advanced fraud detection. Tab switching, copy-pasting, or presence of other individuals will result in immediate disqualification.</span>
+    </div>
+</div>
+
+<div style="text-align: center; margin: 40px 0;">
+    <a href="{{ link }}" class="btn">Start Assessment</a>
+</div>
+
+<div style="text-align: center; font-size: 14px;">
+    <p style="color: #64748b; margin-bottom: 8px;">Technical issues? Connection lost?</p>
+    <a href="{{ reclaimLink }}" style="color: #4f46e5; text-decoration: none; border-bottom: 1px dashed #4f46e5;">Resume Session (Reclaim Link)</a>
+</div>
+
+<hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 40px 0;">
+
+<p style="text-align: center; font-size: 14px; color: #94a3b8;">
+    Sent by <strong>{{ recruiterName }}</strong> at {{ companyName }}
+</p>
+{% endblock %}

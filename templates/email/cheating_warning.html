@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Warning - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>⚠️ Interview Warning</h1>
+<p>Violation Detected</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>Our proctoring system has detected a potential violation during your interview.</p>
+
+<div class="alert-warning">
+    <strong>Violation Details:</strong>
+    <ul style="margin: 10px 0; padding-left: 20px;">
+        <li><strong>Reason:</strong> {{ reason }}</li>
+        <li><strong>Warning Count:</strong> {{ warningCount }}</li>
+    </ul>
+</div>
+
+<p>Please ensure you adhere to the interview rules. Further violations may lead to disqualification.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

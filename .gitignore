@@ -1,0 +1,144 @@
+# ===============================================
+# SmartHiring Backend - Git Ignore Rules
+# ===============================================
+
+# -----------------------------------------------
+# 1. PYTHON & PACKAGE MANAGEMENT
+# -----------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# -----------------------------------------------
+# 2. VIRTUAL ENVIRONMENTS
+# -----------------------------------------------
+# Common venv folder names
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+myenv/
+.venv/
+
+# -----------------------------------------------
+# 3. ENVIRONMENT & SECRETS (CRITICAL)
+# -----------------------------------------------
+# Never ignore the example/template file!
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.staging
+# Exception: Do NOT ignore the example file
+!.env.example
+
+# -----------------------------------------------
+# 4. DATABASE & MIGRATIONS
+# -----------------------------------------------
+*.sqlite3
+*.db
+*.dump
+*.sql
+# Elastic Search logs
+elasticsearch.log
+
+# -----------------------------------------------
+# 5. TESTING & COVERAGE
+# -----------------------------------------------
+.coverage
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+htmlcov/
+test_results/
+
+# -----------------------------------------------
+# 6. LOGS & DIAGNOSTICS
+# -----------------------------------------------
+*.log
+server_log*.txt
+email_service.log
+app.log
+celerybeat-schedule
+celerybeat.pid
+logs/
+socket_debug.log
+
+# -----------------------------------------------
+# 7. IDE & EDITOR FILES
+# -----------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.ropeproject
+.directory
+
+# -----------------------------------------------
+# 8. OPERATING SYSTEM FILES
+# -----------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# -----------------------------------------------
+# 9. APPLICATION SPECIFIC
+# -----------------------------------------------
+# Uploaded files should not be in git
+uploads/*
+!uploads/.gitkeep
+# Scratch space for development
+scratch/
+# Temporary test files
+test.txt
+# Generated audit reports
+audit_report.txt
+# Temporary files
+*.tmp
+*.temp
+# Generated credentials
+credentials.json
+token.json
+client_secret.json
+*.pem
+*.key
+
+# -----------------------------------------------
+# 10. MACHINE LEARNING MODELS
+# -----------------------------------------------
+# Exclude large model files from version control
+ml_models/*.pt
+ml_models/*.pth
+ml_models/*.onnx
+ml_models/*.h5
+ml_models/*.pkl
+ml_models/*.task
+# Keep README documentation
+!ml_models/README.md
+

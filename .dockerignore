@@ -1,0 +1,53 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+
+# Version Control
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.pytest_cache
+.coverage
+htmlcov
+
+# Virtual Environments
+.venv
+venv
+env
+
+# IDE
+.vscode
+.idea
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/*
+!logs/.gitkeep
+
+# Dev Files
+*.md
+.pylintrc
+pyproject.toml
+requirements.in
+
+# Credentials (loaded at runtime via volume/env)
+credentials.json
+token.json
+
+# Scripts (not needed in container)
+scripts/
+
+# Test files
+test_*
+*_test.py

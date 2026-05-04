@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Reclaim Approved - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>✅ Request Approved</h1>
+<p>Interview Reclaim Status</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>Great news! Your interview reclaim request for <strong>{{ jobTitle }}</strong> has been approved.</p>
+
+<div class="alert-success">
+    <strong>Note:</strong> We have generated a secure, fresh interview link for you. Your previous link has been invalidated.
+</div>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ link }}" class="btn">🚀 Resume Interview</a>
+</div>
+
+<p>Please ensure you have a stable internet connection before starting.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

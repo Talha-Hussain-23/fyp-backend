@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Announcement - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>📢 Announcement</h1>
+<p>Message from {{ recruiterName }}</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<div class="card">
+    <h3 style="margin-top: 0; color: #1e293b;">{{ subject }}</h3>
+    <p style="color: #475569; white-space: pre-wrap;">{{ customMessage }}</p>
+</div>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

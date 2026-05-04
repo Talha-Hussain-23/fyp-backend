@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Smart Recruiter AI{% endblock %}</title>
+    <!-- CSS Reset & Base Styles -->
+    <style>
+      body {
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        line-height: 1.6;
+        color: #334155; /* Slate 700 */
+        background-color: #f8fafc; /* Slate 50 */
+        margin: 0;
+        padding: 0;
+        -webkit-text-size-adjust: 100%;
+      }
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        background-color: #f8fafc;
+        padding-bottom: 40px;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      .header {
+        background: linear-gradient(
+          135deg,
+          #4f46e5 0%,
+          #7c3aed 100%
+        ); /* Indigo to Violet */
+        color: #ffffff;
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .header p {
+        margin: 8px 0 0 0;
+        font-size: 16px;
+        opacity: 0.9;
+        font-weight: 500;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .footer {
+        background-color: #f1f5f9; /* Slate 100 */
+        padding: 30px;
+        text-align: center;
+        border-top: 1px solid #e2e8f0;
+      }
+      .footer p {
+        margin: 0;
+        font-size: 13px;
+        color: #64748b; /* Slate 500 */
+      }
+      .footer a {
+        color: #4f46e5;
+        text-decoration: none;
+      }
+      /* Utility Classes for Child Templates */
+      .btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: #ffffff !important;
+        padding: 16px 32px;
+        border-radius: 9999px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 24px 0;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        transition: all 0.2s;
+      }
+      .card {
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 24px 0;
+      }
+      .alert-success {
+        background-color: #ecfdf5;
+        border-left: 4px solid #10b981;
+        color: #065f46;
+        padding: 16px;
+        border-radius: 4px;
+        margin: 24px 0;
+      }
+      .alert-warning {
+        background-color: #fffbeb;
+        border-left: 4px solid #f59e0b;
+        color: #92400e;
+        padding: 16px;
+        border-radius: 4px;
+        margin: 24px 0;
+      }
+      .alert-error {
+        background-color: #fef2f2;
+        border-left: 4px solid #ef4444;
+        color: #991b1b;
+        padding: 16px;
+        border-radius: 4px;
+        margin: 24px 0;
+      }
+      @media only screen and (max-width: 600px) {
+        .container {
+          width: 100% !important;
+          border-radius: 0 !important;
+        }
+        .header {
+          padding: 30px 20px !important;
+        }
+        .content {
+          padding: 30px 20px !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+          {% block header %}
+          <h1>Smart Hiring AI</h1>
+          <p>Intelligent Recruitment Platform</p>
+          {% endblock %}
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="content">
+          {% block content %}
+          <!-- Content goes here -->
+          {% endblock %}
+        </div>
+
+        <!-- Footer Section -->
+        <div class="footer">
+          <p>&copy; {{ now.year }} Smart Recruiter AI. All rights reserved.</p>
+          <p style="margin-top: 8px">
+            <a href="{{ base_url }}/settings">Notification Preferences</a> |
+            <a href="{{ base_url }}/privacy">Privacy Policy</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

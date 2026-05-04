@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Status Update - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>📄 Application Update</h1>
+<p>regardng {{ jobTitle }}</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>The status of your application for <strong>{{ jobTitle }}</strong> has been updated.</p>
+
+<div class="card" style="border-left: 4px solid #6366f1; background-color: #f8fafc; padding: 15px; border-radius: 8px; margin: 20px 0;">
+    <p style="margin: 0; font-size: 14px; color: #64748b;">New Status:</p>
+    <p style="margin: 5px 0 0 0; font-size: 18px; font-weight: bold; color: #1e293b;">{{ friendlyStatus }}</p>
+</div>
+
+{% if feedback %}
+<div style="background-color: #f0fdf4; border: 1px solid #dcfce7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+    <p style="margin: 0; font-size: 14px; color: #166534; font-weight: bold; margin-bottom: 5px;">Recruiter Feedback:</p>
+    <p style="margin: 0; font-size: 15px; color: #1e293b; line-height: 1.5; font-style: italic;">"{{ feedback }}"</p>
+</div>
+{% endif %}
+
+<p>
+    {% if newStatus == 'Interview' %}
+        Congratulations! Our team has selected you for an interview. Please check your candidate portal for more details or next steps.
+    {% elif newStatus == 'Hired' %}
+        Welcome aboard! We are thrilled to have you join our team. Our HR department will reach out with the next steps shortly.
+    {% else %}
+        We will keep you updated on any further progress regarding your application.
+    {% endif %}
+</p>
+
+<div class="alert-success" style="background-color: #eff6ff; border: 1px solid #dbeafe; padding: 15px; border-radius: 8px; margin: 20px 0;">
+    <strong style="color: #1e40af;">💡 Next Steps:</strong>
+    <p style="margin: 5px 0 0 0; color: #1e40af;">You can view your full application history and status details in the candidate dashboard.</p>
+</div>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

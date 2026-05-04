@@ -1,0 +1,54 @@
+[MASTER]
+jobs=4
+persistent=yes
+suggestion-mode=yes
+unsafe-load-any-extension=no
+
+[MESSAGES CONTROL]
+disable=
+    missing-docstring,
+    invalid-name,
+    too-many-arguments,
+    too-many-locals,
+    too-many-branches,
+    too-many-statements,
+    broad-except,
+    fixme,
+    import-error
+
+[REPORTS]
+output-format=colorized
+reports=no
+score=yes
+
+[REFACTORING]
+max-nested-blocks=5
+
+[BASIC]
+good-names=i,j,k,ex,Run,_,id,db,ai,jd,qa
+
+[FORMAT]
+max-line-length=100
+indent-string='    '
+max-module-lines=1500
+
+[DESIGN]
+max-args=10
+max-attributes=15
+max-bool-expr=5
+max-branches=15
+max-locals=20
+max-parents=7
+max-public-methods=25
+max-returns=6
+max-statements=60
+min-public-methods=1
+
+[SIMILARITIES]
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes
+min-similarity-lines=10
+
+[TYPECHECK]
+ignored-classes=optparse.Values,thread._local,_thread._local

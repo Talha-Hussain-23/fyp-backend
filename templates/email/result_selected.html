@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Congratulations! - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>🎉 Congratulations!</h1>
+<p>You've been selected for {{ jobTitle }}</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>We're pleased to inform you that you have been selected for the <strong>{{ jobTitle }}</strong> position!</p>
+
+{% if scoreSection %}
+    {{ scoreSection | safe }}
+{% endif %}
+
+<div class="alert-success">
+    <strong>Next Steps:</strong>
+    <p style="margin: 5px 0 0 0;">{{ customMessage }}</p>
+</div>
+
+<p>Our team will be in touch with you shortly regarding the onboarding process.</p>
+
+<p>Congratulations once again!</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

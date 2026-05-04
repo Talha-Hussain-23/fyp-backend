@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Reclaim Rejected - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>Status Update</h1>
+<p>Interview Reclaim Request</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>We have reviewed your interview reclaim request for <strong>{{ jobTitle }}</strong>.</p>
+
+<p>After careful consideration, we are unable to approve your request at this time.</p>
+
+<div class="alert-error">
+    <strong>Reason:</strong>
+    <p style="margin: 5px 0 0 0;">{{ rejectionMessage }}</p>
+</div>
+
+<p>If you have further questions, please reply to this email.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

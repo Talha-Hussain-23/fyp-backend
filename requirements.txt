@@ -1,0 +1,63 @@
+# SmartHiring Backend - Production Dependencies
+# Core Framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+gunicorn>=21.2.0
+python-multipart==0.0.20
+starlette==0.41.3
+
+# Database
+pymongo>=4.10.1
+motor>=3.6.0
+dnspython
+python-dotenv==1.0.1
+
+# Authentication & Security
+python-jose[cryptography]==3.5.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.2.1
+pydantic[email]
+pydantic-settings
+slowapi
+
+# AI Services
+groq
+google-genai>=1.59.0
+
+# Email & Google Services
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+jinja2
+
+# File Processing
+python-magic; platform_system != "Windows"
+python-magic-bin; platform_system == "Windows"
+PyPDF2
+pdfplumber
+python-docx
+Pillow
+opencv-python-headless>=4.8.0
+
+
+# Real-time Communication
+python-socketio
+python-engineio
+
+
+# Utilities
+requests
+aiohttp
+httpx
+structlog
+rich>=13.7.0
+asgiref>=3.11.0
+
+# Data Processing
+numpy
+pandas
+scikit-learn>=1.8.0
+
+# Async
+anyio

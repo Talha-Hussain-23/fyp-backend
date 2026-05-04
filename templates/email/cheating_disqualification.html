@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Disqualification Notice - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>⚠️ Disqualification Notice</h1>
+<p>Interview Terminated</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>We regret to inform you that your interview has been disqualified due to repeated violations of our proctoring protocols.</p>
+
+<div class="alert-error">
+    <strong>Termination Reason:</strong>
+    <p style="margin: 5px 0 0 0;">{{ reason }}</p>
+</div>
+
+<p>This decision is final and automated based on the security parameters set for this assessment.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

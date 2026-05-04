@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Email - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>✅ Verify Email</h1>
+<p>Confirm your account</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ userName }},</h2>
+
+<p>Welcome to Smart Recruiter AI! Please verify your email address to complete your registration.</p>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ verificationLink }}" class="btn">Verify Account</a>
+</div>
+
+<p>This link helps us ensure the security of your account.</p>
+{% endblock %}

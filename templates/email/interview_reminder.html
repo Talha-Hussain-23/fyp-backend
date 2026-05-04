@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Reminder - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>⏰ Interview Reminder</h1>
+<p>Your interview is coming up soon!</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>This is a friendly reminder that you have an interview for <strong>{{ jobTitle }}</strong> scheduled soon.</p>
+
+<div class="alert-warning">
+    <strong>Date & Time:</strong> {{ interviewDate }}
+</div>
+
+<p>Please ensure you are in a quiet environment with a stable internet connection.</p>
+
+<div style="text-align: center; margin: 30px 0;">
+    <a href="{{ link }}" class="btn">Join Interview</a>
+</div>
+
+<p>Good luck!</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

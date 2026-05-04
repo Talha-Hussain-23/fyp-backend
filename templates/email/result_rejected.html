@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Application Update - Smart Recruiter AI{% endblock %}
+
+{% block header %}
+<h1>Application Update</h1>
+<p> regarding {{ jobTitle }}</p>
+{% endblock %}
+
+{% block content %}
+<h2>Hello {{ candidateName }},</h2>
+
+<p>Thank you for giving us the opportunity to consider you for the <strong>{{ jobTitle }}</strong> position.</p>
+
+{% if scoreSection %}
+    {{ scoreSection | safe }}
+{% endif %}
+
+<p>We have reviewed your application and interview results comprehensively. However, we have decided to move forward with other candidates who more closely match our specific requirements for this role.</p>
+
+<div class="card" style="border-left: 4px solid #94a3b8;">
+    <strong>Feedback:</strong>
+    <p style="margin: 5px 0 0 0; color: #475569;">{{ customMessage }}</p>
+</div>
+
+<p>We appreciate your interest in our company and wish you success in your future endeavors.</p>
+
+<p style="margin-top: 30px;">
+    Best regards,<br>
+    <strong>{{ recruiterName }}</strong>
+</p>
+{% endblock %}

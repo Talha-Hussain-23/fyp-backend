@@ -197,6 +197,9 @@ async def lifespan(app: FastAPI):
     rich_logger.print_status("Email Worker Started", status="success", details=["Status: Listening"])
 
     # ── READY ────────────────────────────────────────────────
+    port = int(os.environ.get("PORT", settings.PORT))
+    logger.info("application_ready", host="0.0.0.0", port=port, message="Server is accepting connections")
+    rich_logger.print_section("SERVER READY", "✅")
     yield
 
     # ── Shutdown ─────────────────────────────────────────────
@@ -243,7 +246,12 @@ app = FastAPI(
 # ── Middleware Stack ─────────────────────────────────────────
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "http://localhost:5173",
+        "https://fyp-frontend-pi-tan.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -58,7 +58,7 @@ USER appuser
 EXPOSE 8080
 
 # Robust Health Check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD python -c "import os,urllib.request; \
     port = os.environ.get('PORT', '8080'); \
     try: urllib.request.urlopen(f'http://127.0.0.1:{port}/health'); \

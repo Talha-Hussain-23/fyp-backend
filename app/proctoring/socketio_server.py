@@ -13,13 +13,15 @@ sio = socketio.AsyncServer(
     async_mode='asgi',
     cors_allowed_origins=[],  # Disabled to let FastAPI CORSMiddleware handle it natively
     logger=True,
-    engineio_logger=False
+    engineio_logger=False,
+    ping_timeout=60,
+    ping_interval=25
 )
 
 # Wrap with ASGI app
-socket_app = socketio.ASGIApp(
-    sio
-)
+# socketio_path="/" ensures the effective path is /socket.io (mount point)
+# without this, it defaults to /socket.io internally causing /socket.io/socket.io/ doubling
+socket_app = socketio.ASGIApp(sio, socketio_path="/")
 
 controller = None
 

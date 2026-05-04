@@ -1,9 +1,9 @@
+print("[BOOT] main.py loading...", flush=True)
 """
 SmartHiring API - Main Application
 Production-ready FastAPI server optimized for Railway deployment.
-Key design: lifespan does ONLY lightweight init (DB connect + cache),
-then yields immediately so the server binds the port within seconds.
-All heavy background services launch AFTER the server is ready.
+Key design: lifespan yields instantly so the port binds in milliseconds.
+DB + all background services launch as fire-and-forget asyncio tasks.
 """
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
@@ -216,11 +216,15 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error("cache_init_failed", error=str(e))
 
+    # ── Launch background services as fire-and-forget task ────
+    # This schedules the task but does NOT block — it runs after yield
+    _register_task(asyncio.create_task(_bootstrap_background_services(app)))
+
     # ── SERVER IS READY — yield to Uvicorn immediately ───────
-    # DB + background services launch via @app.on_event("startup")
     port = int(os.environ.get("PORT", settings.PORT))
     logger.info("server_binding", host="0.0.0.0", port=port)
     rich_logger.print_section("SERVER READY — PORT BOUND", "✅")
+    print(f"[BOOT] Yielding to Uvicorn on port {port}", flush=True)
     yield
 
     # ── Shutdown ─────────────────────────────────────────────
@@ -336,12 +340,6 @@ sio = mount_socketio(app)
 rich_logger.print_status("Socket.IO Mounted", status="success")
 
 
-# ── Background Services (fires AFTER server binds port) ──────
-@app.on_event("startup")
-async def startup_background_services():
-    """Launch all heavy background services AFTER the server is ready."""
-    asyncio.create_task(_bootstrap_background_services(app))
-
 
 # ── Health & Status Endpoints ────────────────────────────────
 @app.get("/favicon.ico", include_in_schema=False)
@@ -360,19 +358,8 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Lightweight health check — responds immediately, validates cache readiness."""
-    from core.cache import get_cache_service
-
-    try:
-        get_cache_service()
-        cache_ok = True
-    except Exception:
-        cache_ok = False
-
-    return {
-        "status": "healthy",
-        "cache": cache_ok,
-    }
+    """Zero-dependency health check — must ALWAYS return 200."""
+    return {"status": "healthy"}
 
 @app.get("/health/detailed")
 async def health_check_detailed():

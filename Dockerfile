@@ -49,4 +49,4 @@ port=os.environ.get('PORT'); \
 urllib.request.urlopen(f'http://127.0.0.1:{port}/health')"
 
 # ✅ IMPORTANT: Use Railway PORT ONLY (no fallback)
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT --log-level info --timeout-keep-alive 65"]

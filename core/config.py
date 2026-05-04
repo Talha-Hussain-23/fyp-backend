@@ -29,7 +29,7 @@ class Settings(BaseSettings):
 
     # ─── Server Config ────────────────────────────────────────────
     HOST: str = "0.0.0.0"
-    PORT: int = 8000
+    PORT: int = 8080
 
     # ─── CORS ─────────────────────────────────────────────────────
     BACKEND_CORS_ORIGINS: List[str] = [

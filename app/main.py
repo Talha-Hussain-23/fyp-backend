@@ -371,7 +371,9 @@ async def api_status():
 
 if __name__ == "__main__":
     import uvicorn
-    # Read port from environment variable (Railway sets this)
-    port = int(os.environ.get("PORT", 8000))
-    logger.info("starting_uvicorn_server", host="0.0.0.0", port=port)
-    uvicorn.run("app.main:app", host="0.0.0.0", port=port, log_level="info", workers=1)
+    # This block is used for local development.
+    # In production, use the uvicorn CLI directly.
+    port = int(os.environ.get("PORT", settings.PORT))
+    logger.info("starting_local_development_server", host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="info")
+

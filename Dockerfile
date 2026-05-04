@@ -55,15 +55,15 @@ RUN mkdir -p logs uploads temp && chown -R appuser:appuser /app/logs /app/upload
 USER appuser
 
 # Expose port (Railway/PaaS providers set PORT dynamically)
-EXPOSE 8000
+EXPOSE 8080
 
 # Robust Health Check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
     CMD python -c "import os,urllib.request; \
-    port = os.environ.get('PORT', '8000'); \
-    try: urllib.request.urlopen(f'http://localhost:{port}/health'); \
-    except: exit(1)"
+    port = os.environ.get('PORT', '8080'); \
+    try: urllib.request.urlopen(f'http://127.0.0.1:{port}/health'); \
+    except Exception as e: print(e); exit(1)"
 
-# Start the application
-# Using python app/main.py as it handles the dynamic PORT logic internally
-CMD ["python", "app/main.py"]
+# Start the application using uvicorn CLI for optimal production performance
+# We use --host 0.0.0.0 to bind to all interfaces
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080"]

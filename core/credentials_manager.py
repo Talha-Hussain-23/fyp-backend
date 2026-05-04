@@ -35,8 +35,14 @@ def get_credentials_from_file() -> Optional[Credentials]:
     
     try:
         if creds_env:
+            # Strip potential surrounding quotes that might be added by .env parsers
+            creds_env = creds_env.strip()
+            if (creds_env.startswith("'") and creds_env.endswith("'")) or \
+               (creds_env.startswith('"') and creds_env.endswith('"')):
+                creds_env = creds_env[1:-1]
+            
             creds_data = json.loads(creds_env)
-            logger.info("loaded_credentials_from_env")
+            logger.info("loaded_credentials_from_env", length=len(creds_env))
         else:
             if not os.path.exists(CREDENTIALS_FILE):
                 raise HTTPException(
@@ -74,7 +80,13 @@ def get_credentials_from_file() -> Optional[Credentials]:
             token_env = os.getenv("GOOGLE_TOKEN_JSON")
             if token_env:
                 try:
-                    logger.info("loading_oauth_token_from_env")
+                    # Strip potential surrounding quotes
+                    token_env = token_env.strip()
+                    if (token_env.startswith("'") and token_env.endswith("'")) or \
+                       (token_env.startswith('"') and token_env.endswith('"')):
+                        token_env = token_env[1:-1]
+                        
+                    logger.info("loading_oauth_token_from_env", length=len(token_env))
                     credentials = Credentials.from_authorized_user_info(json.loads(token_env), SCOPES)
 
                     if not credentials.valid:
